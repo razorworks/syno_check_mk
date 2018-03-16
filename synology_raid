@@ -3,7 +3,7 @@
 # synology_raid: Check the current states of all RAID volumes created in a synology nas.
 #
 # written by: Carsten Fischer <git@nettec-systems.com>
-
+#
 # possible states for raid volumes
 # based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
 
