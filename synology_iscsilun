@@ -1,0 +1,10 @@
+# Check Synology NAS
+#
+# synology_iscsilun: The Synology iSCSI LUN MIB can list all loaded LUNs and show their running information.
+#                    If a LUN has been created but not loaded (e.g. when linked to a target), it will not appear in this list.
+#                    The throughput value may be over int32 range, so we use two i to record it
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# possible states for iSCSI LUN
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
