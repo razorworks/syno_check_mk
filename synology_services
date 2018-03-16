@@ -1,0 +1,8 @@
+# Check Synology NAS
+#
+# synology_services: Check the current states of configured services at a synology nas.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# possible states for services
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
