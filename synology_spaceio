@@ -1,0 +1,8 @@
+# Check Synology NAS
+#
+# synology_spaceio: The Synology Spaceio MIB has I/O information of volumes.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# possible states for space I/O
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
