@@ -1,0 +1,43 @@
+# Check Synology NAS
+#
+# synology_disks: Check the current states of all disks located in a synology NAS.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+
+
+# warn and critical thresholds for the disk temperature
+temperature_threshold_warn = 40
+temperature_threshold_crit = 55
+
+def inventory_synology_disks(info): 
+	inventory = []
+	for name, type, state, temperature in info:
+		if state == "1":
+			inventory.append((name, None))
+        return inventory
+
+def check_synology_disks(item, no_params, info):
+	try:
+		for name, type, state, temperature in info:
+			if name == item:
+				perfdata = [ ( "temp", int(temperature), temperature_threshold_warn, temperature_threshold_crit ) ]
+				if state == "1" and int(temperature)>=temperature_threshold_crit:
+					return (2, "%s is in critical state as the temperature is too high." % name, perfdata)
+				elif state == "1" and int(temperature)>=temperature_threshold_warn:
+					return (1, "%s is in warning state as the temperature is slightly too high." % name, perfdata)
+				elif state == "1" and int(temperature)<temperature_threshold_warn:
+					return (0, "%s is in a good condition." % name, perfdata)
+				else:
+					return (2, "%s is in a failed or unknown state: %i" % (name, state), perfdata)
+	except:
+		print traceback.format_exc()
+		return (3, "UNKNOWN - error occurred while trying to fetch the disk information. %s" % str(info))
+
+check_info["synology_disks"] = {
+    	'check_function':            	check_synology_disks,
+    	'inventory_function':        	inventory_synology_disks,
+    	'service_description':       	'Synology Disk State',
+	'has_perfdata':              	True,
+	'snmp_info':			( ".1.3.6.1.4.1.6574.2.1.1", ["2", "3", "5", "6"]),
+	'snmp_scan_functions':		lambda oid: oid(".1.3.6.1.4.1.6574.2") != None, 
+}
