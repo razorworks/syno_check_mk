@@ -1,0 +1,8 @@
+# Check Synology NAS
+#
+# synology_smart: Check the current SMART states of connected HDDs to a synology nas.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# possible states for SMART
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
