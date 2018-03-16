@@ -1,1 +1,8 @@
-synology_storageio
+# Check Synology NAS
+#
+# synology_storageio: The Synology Storageio MIB has I/O information of disks.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# possible states for storage I/O
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
