@@ -1,0 +1,46 @@
+# Check Synology NAS
+#
+# synology_system: Check the current system state of the synology NAS
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+#
+# warn and critical thresholds for the system temperature
+
+temperature_threshold_warn = 60
+temperature_threshold_crit = 70
+
+def inventory_synology_system(info): 
+	inventory = []
+	for systemStatus, temperature, powerStatus, systemFanStatus, cpuFanStatus, modelName, serialNumber, version in info:
+		if systemStatus == "1":
+			inventory.append((None, None))
+        return inventory
+
+def check_synology_system(item, no_params, info):
+	try:
+		for systemStatus, temperature, powerStatus, systemFanStatus, cpuFanStatus, modelName, serialNumber, version in info:
+			perfdata = [ ( "temp", int(temperature), temperature_threshold_warn, temperature_threshold_crit ) ]
+			if systemStatus == "2":
+				return (2, "System is in a failed state - investigate.", perfdata)
+			elif powerStatus == "2":
+				return (2, "Power system is in a failed state - investigate.", perfdata)
+			elif cpuFanStatus == "2":
+				return (2, "CPU Fan is in a failed state - investigate.", perfdata)
+			elif int(temperature)>=temperature_threshold_crit: 
+				return (2, "System temperature is too high: %s" % temperature, perfdata)
+			elif int(temperature)>=temperature_threshold_warn: 
+				return (1, "System temperature is slightly too high: %s" % temperature, perfdata)
+			else:
+				return (0, "System is in a good condition. Model: %s, Serial: %s, Version: %s" % (modelName, serialNumber, version), perfdata)
+	except:
+		return (3, "UNKNOWN - error occurred while trying to fetch the system information. %s" % str(info))
+
+check_info["synology_system"] = {
+    'check_function':            check_synology_system,
+    'inventory_function':        inventory_synology_system,
+    'service_description':       'Synology System Status',
+    'has_perfdata':              True,
+    'snmp_info':		 ( ".1.3.6.1.4.1.6574.1", ["1", "2", "3", "4.1", "4.2", "5.1", "5.2", "5.3"]),
+    'snmp_scan_functions':       lambda oid: oid(".1.3.6.1.4.1.6574.1") != None,
+
+}
