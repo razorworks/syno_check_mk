@@ -1,0 +1,55 @@
+# Check Synology NAS
+#
+# synology_raid: Check the current states of all RAID volumes created in a synology nas.
+#
+# written by: Carsten Fischer <git@nettec-systems.com>
+
+# possible states for raid volumes
+# based on documentation: https://global.download.synology.com/download/Document/MIBGuide/Synology_DiskStation_MIB_Guide.pdf
+
+states = dict()
+states[1]="Normal"
+states[2]="Repairing"
+states[3]="Migrating"
+states[4]="Expanding"
+states[5]="Deleting"
+states[6]="Creating"
+states[7]="RaidSyncing"
+states[8]="RaidParityChecking"
+states[9]="RaidAssembling"
+states[10]="Canceling"
+states[11]="Degrade"
+states[12]="Crashed"
+
+def inventory_synology_raids(info): 
+	inventory = []
+	for name, state in info:
+		if state == "1":
+			inventory.append((name, None))
+        return inventory
+
+def check_synology_raids(item, no_params, info):
+	try:
+		for name, state in info:
+			if name == item:
+				message = "RAID %s is in state %s." % (name, states[int(state)])
+				if state=="11" or state=="12":
+					return (2, message)
+				elif int(state)>1 and int(state)<11:
+					return (1, message)
+				else:
+					return (0, message)
+
+	except:
+		print traceback.format_exc()
+		return (3, "UNKNOWN - error occurred while trying to fetch the disk information. %s" % str(info))
+
+check_info["synology_raids"] = {
+    'check_function':           check_synology_raids,
+    'inventory_function':       inventory_synology_raids,
+    'service_description':      'Synology RAID State',
+    'has_perfdata':             False,
+    'snmp_info':		( ".1.3.6.1.4.1.6574.3.1.1", ["2", "3"]),
+    'snmp_scan_functions':      lambda oid: oid(".1.3.6.1.4.1.6574.3") != None,
+
+}
