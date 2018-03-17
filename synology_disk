@@ -3,8 +3,7 @@
 # synology_disks: Check the current states of all disks located in a synology NAS.
 #
 # written by: Carsten Fischer <git@nettec-systems.com>
-
-
+#
 # warn and critical thresholds for the disk temperature
 temperature_threshold_warn = 40
 temperature_threshold_crit = 55
